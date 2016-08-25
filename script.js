@@ -43,6 +43,23 @@ function setBoard(across = 20, down = 20, difficulty = 'easy') {
 		for (j = 1; j <= down; j++) {
 			var square = document.createElement("div");
 			square.setAttribute('class', 'square ' + i + '-' + j);
+
+			// add a cover div over each square
+			var cover = document.createElement("div");
+			// set onclick event to trigger flagging / uncovering
+			$(cover).addClass("cover")
+				.click(function() {
+					if (!$(this).hasClass("flag"))
+						$(this).hide();
+				})
+				.contextmenu(function(event) {
+					event.preventDefault();
+					if ($(this).hasClass("flag"))
+						$(this).attr('style', 'background-color: blue').removeClass("flag");
+					else
+						$(this).attr('style', 'background-color: purple').addClass("flag");
+				});
+			square.appendChild(cover);
 			board.appendChild(square);
 		}
 	}

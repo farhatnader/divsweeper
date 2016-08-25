@@ -9,6 +9,16 @@
 	border: 1px solid black;
 }
 
+.cover {
+	background-color: blue;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	z-index: 2;
+}
+
 .number {
+	position: absolute;
 	padding-top: 5px;
+	padding-left: 10px;
 }
