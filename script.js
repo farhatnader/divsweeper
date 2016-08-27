@@ -15,8 +15,13 @@ function placeNumbers(across, down) {
 						}
 					}
 				}
+
 				var inner = document.createElement("div");
-				$(inner).addClass("number").text(mine_count);
+				// only show number if abvoe 0; label 0-squares for detection
+				if (mine_count == 0)
+					$(inner).addClass("zero");
+				else
+					$(inner).addClass("number").text(mine_count);
 				$(selector).append(inner);
 			}
 		}
@@ -34,13 +39,49 @@ function placeMines(across, down) {
 	}
 }
 
+function clearArea(x, y) {
+	// traverse bordering squares
+	for (var i = x - 1; i < x + 2; i++) {
+		for (var j = y - 1; j < y + 2; j++) {
+			var selector = '.' + i + '-' + j;
+			if ($(selector).children().hasClass("uncovered")) {
+				// if already uncovered square, do nothing
+				continue;
+			}
+			else if ($(selector).children().hasClass("number")) {
+				// if square is a number, ONLY uncover it
+				$(selector + " .cover").addClass("uncovered").hide();
+			}
+			else if ($(selector).children().hasClass("zero")) {
+				// if square is a zero, uncover it and check its borders
+				$(selector + " .cover").addClass("uncovered").hide();
+				clearArea(i, j);
+			}
+		}
+	}
+}
+
+function checkSquare(x, y) {
+	// check the newly uncovered square and respond accordingly
+	var selector = '.' + x + '-' + y;
+	if ($(selector).hasClass("mine")) {
+		alert("You LOSE!");
+	}
+	else if ($(selector).children().hasClass("number")) {
+		return;
+	}
+	else if ($(selector).children().hasClass("zero")) {
+		clearArea(x, y);
+	}
+}
+
 function setBoard(across = 20, down = 20, difficulty = 'easy') {
 	var board = document.getElementById("container");
 	board.style.width = across * 30 + across * 2 + 'px';
 
 	// create squares and add them to board
-	for (i = 1; i <= across; i++) {
-		for (j = 1; j <= down; j++) {
+	for (let i = 1; i <= across; i++) {
+		for (let j = 1; j <= down; j++) {
 			var square = document.createElement("div");
 			square.setAttribute('class', 'square ' + i + '-' + j);
 
@@ -48,9 +89,11 @@ function setBoard(across = 20, down = 20, difficulty = 'easy') {
 			var cover = document.createElement("div");
 			// set onclick event to trigger flagging / uncovering
 			$(cover).addClass("cover")
-				.click(function() {
-					if (!$(this).hasClass("flag"))
-						$(this).hide();
+				.on('click', function() {
+					if (!$(this).hasClass("flag")) {
+						$(this).addClass("uncovered").hide();
+						checkSquare(i, j);
+					}
 				})
 				.contextmenu(function(event) {
 					event.preventDefault();
