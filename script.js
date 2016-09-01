@@ -84,6 +84,7 @@ function setBoard(difficulty = 7, across = 20, down = 20) {
 	board.attr('style', 'width: ' + (across * 30 + across * 2) + 'px');
 
 	var mine_count = Math.ceil(across * down / difficulty);
+	$("#mine-counter").text(mine_count);
 
 	// create squares and add them to board
 	for (let i = 1; i <= across; i++) {
@@ -107,6 +108,9 @@ function setBoard(difficulty = 7, across = 20, down = 20) {
 						$(this).attr('style', 'background-color: blue').removeClass("flag");
 					else
 						$(this).attr('style', 'background-color: purple').addClass("flag");
+					if ($(".flag").length != 0) {
+						$("#mine-counter").text(mine_count - $(".flag").length);
+					}
 				});
 			square.appendChild(cover);
 			board.append(square);
