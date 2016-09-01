@@ -28,14 +28,17 @@ function placeNumbers(across, down) {
 	}
 }
 
-function placeMines(across, down) {
+function placeMines(num_mines, across, down) {
 	// place 1 mine for every 5 square
-	for (i = 0; i < across * down / 5; i++) {
+	for (var i = 0; i < num_mines; i++) {
 		// generate random coordinates and use square that matches it
 		var x = Math.floor((Math.random() * across) + 1);
 		var y = Math.floor((Math.random() * down) + 1);
 		var selector = '.' + x + '-' + y;
-		$(selector).attr('style', 'background-color: red').addClass("mine");
+		if ($(selector).hasClass("mine"))
+			i--;
+		else
+			$(selector).attr('style', 'background-color: red').addClass("mine");
 	}
 }
 
@@ -65,7 +68,7 @@ function checkSquare(x, y) {
 	// check the newly uncovered square and respond accordingly
 	var selector = '.' + x + '-' + y;
 	if ($(selector).hasClass("mine")) {
-		alert("You LOSE!");
+		endGame();
 	}
 	else if ($(selector).children().hasClass("number")) {
 		return;
@@ -75,9 +78,12 @@ function checkSquare(x, y) {
 	}
 }
 
-function setBoard(across = 20, down = 20, difficulty = 'easy') {
-	var board = document.getElementById("container");
-	board.style.width = across * 30 + across * 2 + 'px';
+function setBoard(difficulty = 7, across = 20, down = 20) {
+	var board = $("#container");
+	board.html('');
+	board.attr('style', 'width: ' + (across * 30 + across * 2) + 'px');
+
+	var mine_count = Math.ceil(across * down / difficulty);
 
 	// create squares and add them to board
 	for (let i = 1; i <= across; i++) {
@@ -103,10 +109,25 @@ function setBoard(across = 20, down = 20, difficulty = 'easy') {
 						$(this).attr('style', 'background-color: purple').addClass("flag");
 				});
 			square.appendChild(cover);
-			board.appendChild(square);
+			board.append(square);
 		}
 	}
 
-	placeMines(across, down);
+	placeMines(mine_count, across, down);
 	placeNumbers(across, down);
+}
+
+function toggleBoard() {
+	var difficulty = parseInt($("#difficulty").val());
+	var across = 20,
+		down = 20;
+	$("#start").prop('disabled', true);
+	$("#end").prop('disabled', false);
+	setBoard(difficulty, across, down);
+}
+
+function endGame() {
+	$(".mine .cover").addClass("uncovered").hide();
+	$("#start").prop('disabled', false);
+	$("#end").prop('disabled', true);
 }
