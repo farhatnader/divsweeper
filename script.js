@@ -128,10 +128,20 @@ function toggleBoard() {
 	$("#start").prop('disabled', true);
 	$("#end").prop('disabled', false);
 	setBoard(difficulty, across, down);
+	$("#timer").text(0);
+	stopwatch = setInterval(function() { 
+		$("#timer").text(parseInt($("#timer").text()) + 1);
+	}, 1000);
 }
 
 function endGame() {
 	$(".mine .cover").addClass("uncovered").hide();
 	$("#start").prop('disabled', false);
 	$("#end").prop('disabled', true);
+
+	clearInterval(stopwatch)
+}
+
+function countTime() {
+	
 }
