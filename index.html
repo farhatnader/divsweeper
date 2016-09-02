@@ -11,20 +11,22 @@
 
 <center>
 	<p>In progress...</p>
-	<div id="header">
-		<div id="mine-counter"></div>
-		<div id="toggle">
-			<select id="difficulty">
-				<option value="7">Easy</option>
-				<option value="5">Meh</option>
-				<option value="3">Hard</option>
-			</select>
-			<button id="start" onclick="toggleBoard()">Start</button>
-			<button id="end" onclick="endGame()">End</button>
+	<div id="container">
+		<div id="header">
+			<div id="mine-counter"></div>
+			<div id="toggle">
+				<select id="difficulty">
+					<option value="7">Easy</option>
+					<option value="5">Meh</option>
+					<option value="3">Hard</option>
+				</select>
+				<button id="start" onclick="toggleBoard()">Start</button>
+				<button id="end" onclick="endGame()">End</button>
+			</div>
+			<div id="timer"></div>
 		</div>
-		<div id="timer"></div>
+		<div id="board"></div>
 	</div>
-	<div id="container"></div>
 </center>
 
 <script>

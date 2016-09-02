@@ -1,23 +1,26 @@
 #header {
 	width: 600px;
-	margin: 25px;
+	height: 30px;
+	margin: 20px;
+	font-size: 20px;
 }
 
 #mine-counter, #timer {
 	width: 150px;
 	height: 30px;
+	margin-top: 5px;
 }
 
 #toggle {
 	width: 300px;
 }
 
-#mine-counter, #toggle {
+#mine-counter, #toggle, #timer {
 	float: left;
 }
 
-#container {
-	border: 1px solid black;
+#board {
+	/*border: 1px solid black;*/
 }
 
 .square {

@@ -79,12 +79,12 @@ function checkSquare(x, y) {
 }
 
 function setBoard(difficulty = 7, across = 20, down = 20) {
-	var board = $("#container");
+	var board = $("#board");
 	board.html('');
 	board.attr('style', 'width: ' + (across * 30 + across * 2) + 'px');
+	$("#container").attr('style', 'width: ' + (across * 30 + across * 2) + 'px');
 
 	var mine_count = Math.ceil(across * down / difficulty);
-	$("#mine-counter").text(mine_count);
 
 	// create squares and add them to board
 	for (let i = 1; i <= across; i++) {
@@ -128,6 +128,7 @@ function toggleBoard() {
 	$("#start").prop('disabled', true);
 	$("#end").prop('disabled', false);
 	setBoard(difficulty, across, down);
+	$("#mine-counter").text(Math.ceil(across * down / difficulty));
 	$("#timer").text(0);
 	stopwatch = setInterval(function() { 
 		$("#timer").text(parseInt($("#timer").text()) + 1);
