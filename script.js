@@ -71,9 +71,10 @@ function checkSquare(x, y) {
 		endGame();
 	}
 	else if ($(selector).children().hasClass("number")) {
-		return;
+		$(selector + " .cover").addClass("uncovered").hide();
 	}
 	else if ($(selector).children().hasClass("zero")) {
+		$(selector + " .cover").addClass("uncovered").hide();
 		clearArea(x, y);
 	}
 }
@@ -98,7 +99,9 @@ function setBoard(difficulty = 7, across = 20, down = 20) {
 			$(cover).addClass("cover")
 				.on('click', function() {
 					if (!$(this).hasClass("flag")) {
-						$(this).addClass("uncovered").hide();
+						// if first click, clear area of that square
+						if ($(".uncovered").length == 0)
+							clearArea(i, j);
 						checkSquare(i, j);
 					}
 				})
@@ -141,8 +144,4 @@ function endGame() {
 	$("#end").prop('disabled', true);
 
 	clearInterval(stopwatch)
-}
-
-function countTime() {
-	
 }
