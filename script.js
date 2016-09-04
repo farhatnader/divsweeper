@@ -70,12 +70,12 @@ function checkSquare(x, y) {
 	if ($(selector).hasClass("mine")) {
 		endGame();
 	}
-	else if ($(selector).children().hasClass("number")) {
+	else {
 		$(selector + " .cover").addClass("uncovered").hide();
-	}
-	else if ($(selector).children().hasClass("zero")) {
-		$(selector + " .cover").addClass("uncovered").hide();
-		clearArea(x, y);
+		if ($(selector).children().hasClass("zero"))
+			clearArea(x, y);
+		if ($(".uncovered").length == $(".square").length - $(".mine").length)
+			endGame();
 	}
 }
 
