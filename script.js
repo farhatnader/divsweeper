@@ -69,13 +69,16 @@ function checkSquare(x, y) {
 	var selector = '.' + x + '-' + y;
 	if ($(selector).hasClass("mine")) {
 		endGame();
+		$("#message").text('You Lose!');
 	}
 	else {
 		$(selector + " .cover").addClass("uncovered").hide();
 		if ($(selector).children().hasClass("zero"))
 			clearArea(x, y);
-		if ($(".uncovered").length == $(".square").length - $(".mine").length)
+		if ($(".uncovered").length == $(".square").length - $(".mine").length) {
 			endGame();
+			$("#message").text('You win!');
+		}
 	}
 }
 
@@ -130,6 +133,7 @@ function toggleBoard() {
 		down = 20;
 	$("#start").prop('disabled', true);
 	$("#end").prop('disabled', false);
+	$("#message").text('Watch your click!');
 	setBoard(difficulty, across, down);
 	$("#mine-counter").text(Math.ceil(across * down / difficulty));
 	$("#timer").text(0);
