@@ -38,7 +38,7 @@ function placeMines(num_mines, across, down) {
 		if ($(selector).hasClass("mine"))
 			i--;
 		else
-			$(selector).attr('style', 'background-color: red').addClass("mine");
+			$(selector).addClass("mine");
 	}
 }
 
@@ -47,18 +47,16 @@ function clearArea(x, y) {
 	for (var i = x - 1; i < x + 2; i++) {
 		for (var j = y - 1; j < y + 2; j++) {
 			var selector = '.' + i + '-' + j;
-			if ($(selector).children().hasClass("uncovered")) {
-				// if already uncovered square, do nothing
+			// if already uncovered square/mine, do nothing
+			if ($(selector).children().hasClass("uncovered"))
 				continue;
-			}
-			else if ($(selector).children().hasClass("number")) {
-				// if square is a number, ONLY uncover it
+			else if ($(selector).hasClass("mine"))
+				continue;
+			else {
 				$(selector + " .cover").addClass("uncovered").hide();
-			}
-			else if ($(selector).children().hasClass("zero")) {
-				// if square is a zero, uncover it and check its borders
-				$(selector + " .cover").addClass("uncovered").hide();
-				clearArea(i, j);
+				// if square is a zero, uncover it and recurse into its borders
+				if ($(selector).children().hasClass("zero"))
+					clearArea(i, j);
 			}
 		}
 	}
@@ -75,6 +73,7 @@ function checkSquare(x, y) {
 		$(selector + " .cover").addClass("uncovered").hide();
 		if ($(selector).children().hasClass("zero"))
 			clearArea(x, y);
+		// if all non-mines are uncovered
 		if ($(".uncovered").length == $(".square").length - $(".mine").length) {
 			endGame();
 			$("#message").text('You win!');
@@ -86,7 +85,6 @@ function setBoard(difficulty = 7, across = 20, down = 20) {
 	var board = $("#board");
 	board.html('');
 	board.attr('style', 'width: ' + (across * 30 + across * 2) + 'px');
-	$("#container").attr('style', 'width: ' + (across * 30 + across * 2) + 'px');
 
 	var mine_count = Math.ceil(across * down / difficulty);
 
@@ -111,12 +109,12 @@ function setBoard(difficulty = 7, across = 20, down = 20) {
 				.contextmenu(function(event) {
 					event.preventDefault();
 					if ($(this).hasClass("flag"))
-						$(this).attr('style', 'background-color: blue').removeClass("flag");
+						$(this).removeClass("flag");
 					else
-						$(this).attr('style', 'background-color: purple').addClass("flag");
-					if ($(".flag").length != 0) {
+						$(this).addClass("flag");
+					// if the amount of flags placed != the amount of mines
+					if ($(".flag").length != 0)
 						$("#mine-counter").text(mine_count - $(".flag").length);
-					}
 				});
 			square.appendChild(cover);
 			board.append(square);
@@ -146,6 +144,5 @@ function endGame() {
 	$(".mine .cover").addClass("uncovered").hide();
 	$("#start").prop('disabled', false);
 	$("#end").prop('disabled', true);
-
 	clearInterval(stopwatch)
 }
